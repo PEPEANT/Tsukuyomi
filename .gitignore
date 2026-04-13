@@ -1,0 +1,14 @@
+node_modules
+dist
+.DS_Store
+Thumbs.db
+
+# Local scratch / diagnostics
+.claude/
+.tmp-*.log
+tmp_*.js
+tmp_*.html
+*.tmp
+
+# Runtime temp artifacts
+server/data/persist-check-*.json

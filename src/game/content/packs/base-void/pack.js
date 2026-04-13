@@ -1,0 +1,280 @@
+import { GAME_CONSTANTS } from "../../../config/gameConstants.js";
+
+export const BASE_VOID_PACK = {
+  id: "base-void",
+  name: "Base Void",
+  world: {
+    skyColor: 0xa8d4f5,
+    fogDensity: 0.0022,
+    fogNear: 110,
+    fogFar: 500,
+    sky: {
+      scale: 450000,
+      turbidity: 1.85,
+      rayleigh: 2.95,
+      mieCoefficient: 0.0028,
+      mieDirectionalG: 0.79,
+      textureUrl: "",
+      textureBackgroundIntensity: 0.2,
+      textureEnvironmentIntensity: 0.16
+    },
+    clouds: {
+      enabled: true,
+      count: 20,
+      area: 3000,
+      minHeight: 154,
+      maxHeight: 312,
+      minScale: 34,
+      maxScale: 82,
+      color: 0xf7fbff,
+      opacity: 0.58,
+      driftMin: 0.06,
+      driftMax: 0.18,
+      minPuffs: 7,
+      maxPuffs: 11,
+      puffSpread: 2.3,
+      puffHeightSpread: 0.18,
+      mobileCountScale: 0.55,
+      windAngle: -0.46,
+      windVariance: 0.34,
+      cirrusCount: 6,
+      distantCount: 7,
+      distantHeightBoost: 40,
+      distantOpacityScale: 0.78,
+      emissive: 0x304a63,
+      emissiveIntensity: 0.015
+    },
+    lights: {
+      hemisphere: {
+        skyColor: 0xe1efff,
+        groundColor: 0xbec7d2,
+        intensity: 0.88
+      },
+      sun: {
+        color: 0xffffff,
+        intensity: 0.86,
+        position: [70, 130, 44],
+        shadowMobileSize: 1024,
+        shadowDesktopSize: 768,
+        shadowBounds: 300,
+        shadowNear: 1,
+        shadowFar: 500,
+        shadowBias: -0.00018,
+        shadowNormalBias: 0.02
+      },
+      fill: {
+        color: 0xe5f2ff,
+        intensity: 0.26,
+        position: [-72, 56, -32]
+      }
+    },
+    ground: {
+      textureUrl: "",
+      normalTextureUrl: "",
+      roughnessTextureUrl: "",
+      aoTextureUrl: "",
+      repeatX: 1,
+      repeatY: 1,
+      size: 240,
+      color: 0xb0b5bb,
+      roughness: 0.9,
+      metalness: 0,
+      emissive: 0x383e44,
+      emissiveIntensity: 0.06,
+      normalScale: [1, 1],
+      aoIntensity: 0,
+      undersideColor: 0xa4aab0,
+      undersideEmissive: 0x33393f,
+      undersideEmissiveIntensity: 0.06,
+      undersideOffsetY: -0.12
+    },
+    boundary: {
+      enabled: false,
+      halfExtent: GAME_CONSTANTS.WORLD_LIMIT,
+      height: 14,
+      thickness: 2.2,
+      color: 0x6f757d,
+      roughness: 0.82,
+      metalness: 0.03,
+      emissive: 0x20252a,
+      emissiveIntensity: 0.09
+    },
+    chalk: {
+      enabled: false,
+      maxMarks: 2800,
+      minDistance: 0.17,
+      markSizeMin: 0.14,
+      markSizeMax: 0.22,
+      markHeight: 0.032,
+      markOpacity: 0.82,
+      colors: ["#f5f7ff", "#ffd86a", "#7ec9ff", "#ff9cc5", "#a9f89f"]
+    },
+    ocean: {
+      enabled: true,
+      width: 560,
+      depth: 560,
+      shorelineX: -120,
+      shoreDirection: -1,
+      positionX: 0,
+      positionY: 0.06,
+      positionZ: -18,
+      normalTextureUrl: "/assets/graphics/world/textures/oss-water/waternormals.jpg",
+      normalRepeatX: 20,
+      normalRepeatY: 20,
+      color: 0x2f8ed9,
+      sunColor: 0xffffff,
+      opacity: 1,
+      distortionScale: 1.28,
+      timeScale: 0.22,
+      bobAmplitude: 0.014,
+      bobFrequency: 0.42
+    },
+    beach: {
+      enabled: false,
+      textureUrl: "/assets/graphics/world/textures/cc0-sand/sand_color.jpg",
+      normalTextureUrl: "/assets/graphics/world/textures/cc0-sand/sand_normal_gl.jpg",
+      roughnessTextureUrl: "/assets/graphics/world/textures/cc0-sand/sand_roughness.jpg",
+      aoTextureUrl: "/assets/graphics/world/textures/cc0-sand/sand_ao.jpg",
+      shorelineX: -28,
+      shoreDirection: -1,
+      positionX: 0,
+      width: 120,
+      depth: 168,
+      positionY: 0.082,
+      positionZ: -52,
+      repeatX: 10,
+      repeatY: 44,
+      color: 0xd9c08a,
+      roughness: 0.93,
+      metalness: 0,
+      normalScale: [0.65, 0.65],
+      aoIntensity: 0.32,
+      foamWidth: 72,
+      foamOpacity: 0.46,
+      foamColor: 0xe8f7ff,
+      wetBandWidth: 120,
+      wetBandOpacity: 0.22,
+      wetBandColor: 0xc8a16a
+    },
+    originMarker: {
+      enabled: false,
+      radiusTop: 0.4,
+      radiusBottom: 0.4,
+      height: 1.6,
+      radialSegments: 14,
+      position: [0, 0.8, -5],
+      material: {
+        color: 0x5e6f83,
+        roughness: 0.32,
+        metalness: 0.1,
+        emissive: 0x2a3a52,
+        emissiveIntensity: 0.2
+      }
+    },
+    hubFlow: {
+      enabled: true,
+      introSeconds: 4.8,
+      npcs: [
+        {
+          id: "bridge_gatekeeper",
+          position: [0, 0, -92],
+          scale: 1.34,
+          interactionRadius: 5.4
+        },
+        {
+          id: "city_archivist",
+          position: [-18, 0, 14],
+          scale: 1.08,
+          interactionRadius: 5.8
+        },
+        {
+          id: "city_curator",
+          position: [18, 0, 18],
+          scale: 1.04,
+          interactionRadius: 5.8
+        }
+      ],
+      bridge: {
+        approachSpawn: [0, GAME_CONSTANTS.PLAYER_HEIGHT, -98],
+        spawn: [0, GAME_CONSTANTS.PLAYER_HEIGHT, -86],
+        npcPosition: [0, 0, -92],
+        npcScale: 1.34,
+        npcTriggerRadius: 5,
+        mirrorPosition: [0, 1.72, -76],
+        mirrorLookSeconds: 1.5,
+        cityEntry: [0, GAME_CONSTANTS.PLAYER_HEIGHT, -18],
+        boundaryRadius: 3.2,
+        width: 10,
+        deckColor: 0x4f5660,
+        railColor: 0x8fa2b8
+      },
+      city: {
+        spawn: [0, GAME_CONSTANTS.PLAYER_HEIGHT, -8],
+        lookTarget: [0, GAME_CONSTANTS.PLAYER_HEIGHT, 56]
+      },
+      portal: {
+        // Right-side experiment portal. Leave the default target blank so the host can plug one later.
+        position: [60, 0.08, -4],
+        yawDegrees: 90,
+        radius: 4.4,
+        cooldownSeconds: 60,
+        warningSeconds: 16,
+        openSeconds: 24,
+        targetUrl: "",
+        aZoneTargetUrl: "https://reclaim-fps.onrender.com/",
+        // FPS portal defaults to the middle lane so all three portals are visible from spawn.
+        aZonePosition: [0, 0.08, -4],
+        // Move the live/performance portal to the left side pad so the center lane stays open.
+        hallPosition: [-60, 0.08, -4],
+        hallTargetUrl:
+          "https://performance-i3w5.onrender.com/performance/?host=0&room=event01&from=emptines"
+      }
+    },
+    postProcessing: {
+      exposure: 0.82,
+      bloom: {
+        enabled: false,
+        mobileEnabled: false,
+        strength: 0.05,
+        radius: 0.56,
+        threshold: 0.96
+      }
+    }
+  },
+  hands: {
+    skin: {
+      color: 0xe4bda0,
+      roughness: 0.46,
+      metalness: 0.03,
+      emissive: 0x6e5040,
+      emissiveIntensity: 0.05
+    },
+    sleeve: {
+      color: 0x4e6f8e,
+      roughness: 0.62,
+      metalness: 0.08,
+      emissive: 0x1f3347,
+      emissiveIntensity: 0.13
+    },
+    pose: {
+      shoulderX: 0.24,
+      shoulderY: -0.2,
+      shoulderZ: -0.58,
+      elbowY: -0.3,
+      elbowZ: -0.45,
+      handY: -0.4,
+      handZ: -0.33,
+      upperArmRoll: 0.42,
+      forearmRoll: 0.22,
+      bendX: 0.16
+    },
+    groupRotationX: -0.03,
+    swayAmplitude: 0.012,
+    swayFrequency: 0.0042
+  },
+  network: {
+    syncInterval: GAME_CONSTANTS.REMOTE_SYNC_INTERVAL,
+    remoteLerpSpeed: GAME_CONSTANTS.REMOTE_LERP_SPEED,
+    staleTimeoutMs: GAME_CONSTANTS.REMOTE_STALE_TIMEOUT_MS
+  }
+};

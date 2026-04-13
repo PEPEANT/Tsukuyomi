@@ -1,0 +1,3170 @@
+:root {
+  color-scheme: only light;
+  --hud-text: #f3f8ff;
+  --hud-border: rgba(188, 213, 238, 0.56);
+  --hud-bg: rgba(14, 25, 38, 0.6);
+  --accent-bright: #9ff4ff;
+  --accent-danger: #ff7d7d;
+  --panel-bg: rgba(7, 20, 33, 0.86);
+  --panel-border: rgba(138, 178, 212, 0.62);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(155, 197, 255, 0.18), transparent 44%),
+    radial-gradient(circle at 86% 84%, rgba(128, 167, 225, 0.14), transparent 50%),
+    #081523;
+  color: var(--hud-text);
+}
+
+#app,
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#hud-ui {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 36;
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.hud-row strong {
+  color: #e9f6ff;
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font: 700 0.69rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+}
+
+.hud-key {
+  color: rgba(173, 212, 246, 0.9);
+}
+
+#hud-row-status,
+#hud-row-position,
+#hud-row-fps {
+  display: none !important;
+}
+
+#hud-row-players .hud-key {
+  display: none !important;
+}
+
+#fullscreen-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 72;
+  min-width: 88px;
+  height: 32px;
+  border: 1px solid rgba(180, 212, 239, 0.66);
+  border-radius: 999px;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e6f4ff;
+  font: 700 0.66rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#fullscreen-toggle:hover {
+  border-color: rgba(214, 236, 255, 0.92);
+  background: rgba(19, 45, 69, 0.92);
+}
+
+/* Settings gear button — available on both desktop and mobile */
+#settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 14px;
+  right: 108px;
+  z-index: 74;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(180, 212, 239, 0.5);
+  border-radius: 50%;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e6f4ff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+#settings-btn:active {
+  background: rgba(20, 46, 70, 0.92);
+}
+
+#settings-panel {
+  position: fixed;
+  top: 58px;
+  right: 108px;
+  z-index: 74;
+  width: 190px;
+  padding: 10px;
+  border: 1px solid rgba(170, 206, 238, 0.52);
+  border-radius: 12px;
+  background: rgba(8, 20, 33, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 22px rgba(2, 8, 14, 0.46);
+  display: grid;
+  gap: 9px;
+}
+
+#settings-panel.hidden {
+  display: none;
+}
+
+.sp-row {
+  display: grid;
+  gap: 5px;
+}
+
+.sp-label {
+  color: rgba(186, 220, 248, 0.85);
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sp-value {
+  color: rgba(208, 232, 252, 0.92);
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+}
+
+.sp-quality-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.sp-quality-btn {
+  height: 26px;
+  border: 1px solid rgba(155, 198, 232, 0.44);
+  border-radius: 6px;
+  background: rgba(12, 28, 44, 0.82);
+  color: #c2dff4;
+  font: 700 0.6rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.sp-quality-btn.active {
+  border-color: rgba(120, 196, 255, 0.78);
+  background: rgba(18, 48, 74, 0.9);
+  color: #a6dcff;
+}
+
+#sp-fullscreen-btn {
+  width: 100%;
+  height: 28px;
+  border: 1px solid rgba(155, 198, 232, 0.44);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.82);
+  color: #c2dff4;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#sp-fullscreen-btn:active {
+  background: rgba(20, 48, 74, 0.92);
+}
+
+.sp-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+#sp-volume {
+  flex: 1;
+  accent-color: #5abeff;
+  height: 4px;
+  cursor: pointer;
+}
+
+#graphics-toggle {
+  position: fixed;
+  top: 52px;
+  right: 14px;
+  z-index: 72;
+  min-width: 96px;
+  height: 32px;
+  border: 1px solid rgba(180, 212, 239, 0.66);
+  border-radius: 999px;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e6f4ff;
+  font: 700 0.66rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#graphics-toggle:hover {
+  border-color: rgba(214, 236, 255, 0.92);
+  background: rgba(19, 45, 69, 0.92);
+}
+
+#graphics-toggle[aria-pressed="true"] {
+  border-color: rgba(210, 232, 251, 0.92);
+  background: rgba(21, 50, 76, 0.9);
+}
+
+#graphics-controls {
+  position: fixed;
+  top: 52px;
+  right: 118px;
+  z-index: 73;
+  width: min(44vw, 178px);
+  padding: 8px 10px;
+  border: 1px solid rgba(180, 212, 239, 0.58);
+  border-radius: 10px;
+  background: rgba(10, 24, 39, 0.9);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 18px rgba(2, 8, 12, 0.34);
+  display: grid;
+  gap: 6px;
+}
+
+#graphics-controls label {
+  color: rgba(204, 230, 250, 0.92);
+  font: 700 0.63rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+}
+
+#graphics-quality-select {
+  width: 100%;
+  height: 30px;
+  border: 1px solid rgba(160, 204, 236, 0.65);
+  border-radius: 7px;
+  background: rgba(6, 18, 29, 0.84);
+  color: #e8f5ff;
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  padding: 0 8px;
+}
+
+#graphics-quality-select:focus-visible {
+  outline: 2px solid rgba(123, 201, 255, 0.82);
+  outline-offset: 1px;
+}
+
+#host-chat-toggle {
+  position: fixed;
+  top: 90px;
+  right: 14px;
+  z-index: 72;
+  min-width: 88px;
+  height: 32px;
+  border: 1px solid rgba(180, 212, 239, 0.66);
+  border-radius: 999px;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e6f4ff;
+  font: 700 0.66rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#host-chat-toggle:hover {
+  border-color: rgba(214, 236, 255, 0.92);
+  background: rgba(19, 45, 69, 0.92);
+}
+
+#host-controls-toggle {
+  position: fixed;
+  top: 128px;
+  right: 14px;
+  z-index: 72;
+  min-width: 110px;
+  height: 32px;
+  border: 1px solid rgba(180, 212, 239, 0.66);
+  border-radius: 999px;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e6f4ff;
+  font: 700 0.66rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#host-controls-toggle:hover {
+  border-color: rgba(214, 236, 255, 0.92);
+  background: rgba(19, 45, 69, 0.92);
+}
+
+#host-controls-toggle[aria-pressed="true"] {
+  border-color: rgba(210, 232, 251, 0.92);
+  background: rgba(21, 50, 76, 0.9);
+}
+
+#player-roster {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 36;
+  width: min(92vw, 320px);
+  max-height: min(64vh, 520px);
+  overflow: auto;
+  padding: 10px 12px;
+  border: 1px solid rgba(186, 213, 239, 0.64);
+  border-radius: 11px;
+  background: rgba(8, 20, 33, 0.78);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 10px 24px rgba(3, 9, 14, 0.34);
+}
+
+.player-roster-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+  font: 700 0.78rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+}
+
+#player-roster-count {
+  color: #e4f5ff;
+  font-size: 0.9rem;
+}
+
+.player-roster-hint {
+  margin: 0 0 8px;
+  color: rgba(171, 210, 244, 0.84);
+  font: 600 0.68rem/1.28 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+#player-roster-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  color: #e2f2ff;
+  font: 700 0.74rem/1.28 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+#player-roster-list li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#player-roster-list li.self {
+  color: #ffffff;
+}
+
+#player-roster-list li.host {
+  color: #9be7ff;
+}
+
+#player-roster-list li.empty {
+  list-style: none;
+  margin-left: -18px;
+  color: rgba(181, 214, 244, 0.8);
+}
+
+#host-controls {
+  position: fixed;
+  top: 170px;
+  right: 14px;
+  left: auto;
+  z-index: 36;
+  pointer-events: auto;
+  display: grid;
+  gap: 6px;
+  max-height: calc(100vh - 184px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#host-open-portal {
+  min-width: 148px;
+  height: 34px;
+  border: 1px solid rgba(167, 211, 242, 0.68);
+  border-radius: 8px;
+  background: rgba(12, 30, 46, 0.86);
+  color: #dff3ff;
+  font: 700 0.72rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+#host-open-portal:hover {
+  border-color: rgba(199, 230, 251, 0.94);
+  background: rgba(20, 49, 74, 0.92);
+}
+
+#host-open-portal:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* accordion sections */
+.host-section {
+  border: 1px solid rgba(148, 196, 230, 0.38);
+  border-radius: 9px;
+  background: rgba(8, 22, 35, 0.72);
+  overflow: hidden;
+}
+
+.host-section-head {
+  padding: 7px 9px;
+  cursor: pointer;
+  user-select: none;
+  color: #b8dcf7;
+  font: 700 0.67rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.09em;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.host-section-head::-webkit-details-marker { display: none; }
+
+.host-section-head::before {
+  content: "▶";
+  font-size: 0.5rem;
+  opacity: 0.6;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.host-section[open] > .host-section-head::before {
+  transform: rotate(90deg);
+}
+
+.host-section-body {
+  display: grid;
+  gap: 6px;
+  padding: 6px 8px 9px;
+  border-top: 1px solid rgba(148, 196, 230, 0.2);
+}
+
+.host-editor-count {
+  color: #a9d7f6;
+  font: 700 0.65rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+}
+
+#editor-mode-row {
+  gap: 4px;
+}
+
+#editor-limit-row,
+#editor-scale-row,
+#editor-rope-scale-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+}
+
+#editor-limit-row label,
+#editor-scale-row label,
+#editor-rope-scale-row label {
+  color: #a9d7f6;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+#editor-platform-limit,
+#editor-rope-limit {
+  min-width: 0;
+  width: 100%;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid rgba(163, 206, 239, 0.62);
+  border-radius: 7px;
+  background: rgba(10, 24, 37, 0.9);
+  color: #e6f5ff;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#editor-platform-scale,
+#editor-rope-scale {
+  width: 100%;
+  min-width: 0;
+  accent-color: #00e5cc;
+}
+
+#editor-platform-scale-value,
+#editor-rope-scale-value {
+  color: #c7f6e9;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  text-align: right;
+  min-width: 36px;
+}
+
+#editor-settings-apply {
+  min-width: 0;
+  height: 28px;
+  border: 1px solid rgba(161, 203, 235, 0.58);
+  border-radius: 7px;
+  background: rgba(10, 26, 40, 0.82);
+  color: #dcefff;
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+#editor-settings-apply:disabled,
+#editor-platform-limit:disabled,
+#editor-rope-limit:disabled,
+#editor-platform-scale:disabled,
+#editor-rope-scale:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+
+.editor-mode-btn {
+  flex: 1;
+  padding: 4px 0;
+  font: 700 0.65rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(148,196,230,0.25);
+  border-radius: 5px;
+  color: #7abadc;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.editor-mode-btn.active {
+  background: rgba(0,229,204,0.18);
+  border-color: #00e5cc;
+  color: #00e5cc;
+}
+
+#editor-mode-obj.active {
+  background: rgba(255, 204, 68, 0.2);
+  border-color: #ffcc44;
+  color: #ffcc44;
+}
+
+#obj-editor-row {
+  margin-top: 2px;
+}
+
+#obj-editor-row .editor-mode-btn {
+  flex: 1;
+  min-width: 0;
+}
+
+#rope-climb-prompt {
+  position: fixed;
+  bottom: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(8, 22, 35, 0.82);
+  color: #e0f0ff;
+  font: 600 0.82rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: 1px solid rgba(212, 169, 106, 0.5);
+  pointer-events: none;
+  z-index: 80;
+}
+
+#rope-climb-prompt kbd {
+  display: inline-block;
+  background: rgba(212, 169, 106, 0.22);
+  border: 1px solid rgba(212, 169, 106, 0.6);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.78rem;
+  margin-right: 4px;
+}
+
+#host-schedule-controls {
+  display: grid;
+  gap: 6px;
+}
+
+.host-delay-row {
+  display: flex;
+  gap: 4px;
+}
+
+.host-delay-btn {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  border: 1px solid rgba(161, 203, 235, 0.58);
+  border-radius: 7px;
+  background: rgba(10, 26, 40, 0.82);
+  color: #dcefff;
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.host-delay-btn:hover {
+  border-color: rgba(199, 229, 250, 0.9);
+}
+
+.host-delay-btn:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+
+.host-custom-row {
+  display: flex;
+  gap: 4px;
+}
+
+#host-delay-minutes,
+#host-delay-unit,
+#host-portal-target,
+#host-gray-object-width,
+#host-gray-object-height,
+#host-gray-object-depth {
+  width: 64px;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid rgba(163, 206, 239, 0.62);
+  border-radius: 7px;
+  background: rgba(10, 24, 37, 0.9);
+  color: #e6f5ff;
+  font: 700 0.68rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#host-portal-target {
+  flex: 1;
+  width: 100%;
+  min-width: 130px;
+}
+
+#host-a-zone-portal-target {
+  flex: 1 1 240px;
+  width: 100%;
+  min-width: 220px;
+}
+
+#host-apply-delay,
+#host-portal-target-apply,
+#host-a-zone-portal-target-apply,
+#host-gray-object-add {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  border: 1px solid rgba(161, 203, 235, 0.58);
+  border-radius: 7px;
+  background: rgba(10, 26, 40, 0.82);
+  color: #dcefff;
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+#host-a-zone-portal-target-apply {
+  flex: 0 0 auto;
+  min-width: 56px;
+  padding: 0 10px;
+}
+
+#host-apply-delay:disabled,
+#host-delay-unit:disabled,
+#host-portal-target-apply:disabled,
+#host-portal-target:disabled,
+#host-a-zone-portal-target-apply:disabled,
+#host-a-zone-portal-target:disabled,
+#host-gray-object-width:disabled,
+#host-gray-object-height:disabled,
+#host-gray-object-depth:disabled,
+#host-gray-object-add:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+
+.host-gray-object-size-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+#host-billboard-controls {
+  display: grid;
+  gap: 6px;
+}
+
+.host-control-label {
+  color: #a9d7f6;
+  font: 700 0.6rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.1em;
+}
+
+#host-right-video {
+  width: 102px;
+  height: 28px;
+  padding: 0 5px;
+  border: 1px solid rgba(163, 206, 239, 0.62);
+  border-radius: 7px;
+  background: rgba(10, 24, 37, 0.9);
+  color: #e6f5ff;
+  font: 700 0.64rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#host-right-video-quick {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.host-video-quick-btn {
+  min-width: 0;
+  height: 24px;
+  border: 1px solid rgba(161, 203, 235, 0.58);
+  border-radius: 7px;
+  background: rgba(9, 24, 36, 0.78);
+  color: #dcefff;
+  font: 700 0.54rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.host-video-quick-btn.active {
+  border-color: rgba(255, 216, 106, 0.82);
+  background: rgba(35, 58, 81, 0.92);
+  color: #fff4c7;
+}
+
+#host-right-play,
+#host-right-reset {
+  min-width: 0;
+  height: 28px;
+  border: 1px solid rgba(161, 203, 235, 0.58);
+  border-radius: 7px;
+  background: rgba(10, 26, 40, 0.82);
+  color: #dcefff;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+#host-right-play {
+  flex: 1;
+}
+
+#host-right-play:disabled,
+#host-right-reset:disabled,
+#host-right-video:disabled,
+.host-video-quick-btn:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+
+#hub-flow-ui {
+  display: none !important;
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  z-index: 34;
+  transform: translateX(-50%);
+  width: min(92vw, 560px);
+  pointer-events: none;
+}
+
+#hub-billboard {
+  display: grid;
+  gap: 6px;
+  padding: 14px 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  background:
+    linear-gradient(140deg, rgba(30, 58, 89, 0.72), rgba(8, 19, 30, 0.9)),
+    radial-gradient(circle at 18% 10%, rgba(153, 220, 255, 0.2), transparent 42%);
+  box-shadow:
+    0 0 0 1px rgba(117, 162, 196, 0.18),
+    0 10px 26px rgba(3, 10, 16, 0.44);
+  backdrop-filter: blur(6px);
+}
+
+.hub-kicker {
+  margin: 0;
+  color: #9ed7ff;
+  font: 700 0.67rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.2em;
+}
+
+#hub-phase-title {
+  margin: 0;
+  font: 700 1.22rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  color: #ecf8ff;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+#hub-phase-subtitle {
+  margin: 0;
+  color: #c3ddf4;
+  font: 600 0.82rem/1.3 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+#nickname-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.98);
+}
+
+#nickname-form {
+  width: min(92vw, 460px);
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(145, 191, 228, 0.68);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  box-shadow: 0 16px 38px rgba(2, 8, 14, 0.5);
+}
+
+#nickname-title {
+  margin: 0;
+  color: #ebf8ff;
+  font: 700 1.06rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nickname-copy {
+  margin: 0;
+  color: #b6d7f2;
+  font: 600 0.84rem/1.35 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+#nickname-form label {
+  color: #bce5ff;
+  font: 700 0.68rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+#nickname-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(167, 213, 247, 0.7);
+  border-radius: 9px;
+  background: rgba(11, 28, 44, 0.94);
+  color: #edf7ff;
+  font: 700 0.91rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  outline: none;
+}
+
+#nickname-input::placeholder {
+  color: rgba(182, 215, 242, 0.62);
+}
+
+#nickname-input:focus {
+  border-color: rgba(191, 228, 255, 0.98);
+  box-shadow: 0 0 0 2px rgba(145, 195, 232, 0.25);
+}
+
+#nickname-error {
+  margin: 0;
+  color: #ffbcbc;
+  font: 700 0.75rem/1.3 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+#nickname-submit {
+  height: 42px;
+  border: 1px solid rgba(179, 220, 250, 0.82);
+  border-radius: 9px;
+  background: linear-gradient(140deg, rgba(20, 53, 83, 0.95), rgba(9, 22, 35, 0.98));
+  color: #e8f7ff;
+  font: 700 0.8rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#nickname-submit:hover {
+  border-color: rgba(198, 231, 255, 0.95);
+}
+
+#npc-choice-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 79;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 8, 14, 0.94);
+}
+
+#npc-choice-panel {
+  width: min(92vw, 460px);
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(145, 191, 228, 0.68);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  box-shadow: 0 16px 38px rgba(2, 8, 14, 0.5);
+}
+
+.npc-choice-name {
+  margin: 0;
+  color: #7dcfff;
+  font: 700 0.74rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+#npc-choice-title {
+  margin: 0;
+  color: #ebf8ff;
+  font: 700 1.06rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+}
+
+.npc-choice-copy {
+  margin: 0;
+  color: #b6d7f2;
+  font: 600 0.84rem/1.35 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.npc-choice-sources {
+  margin: 0;
+  color: #8ab6d8;
+  font: 600 0.7rem/1.35 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+}
+
+#npc-choice-actions {
+  display: grid;
+  gap: 8px;
+}
+
+#npc-choice-actions button {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid rgba(179, 220, 250, 0.82);
+  border-radius: 9px;
+  background: linear-gradient(140deg, rgba(20, 53, 83, 0.95), rgba(9, 22, 35, 0.98));
+  color: #e8f7ff;
+  font: 700 0.78rem/1.25 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  text-align: left;
+  cursor: pointer;
+}
+
+#npc-choice-actions button:hover {
+  border-color: rgba(198, 231, 255, 0.95);
+}
+
+#npc-choice-actions button.npc-choice-primary {
+  border-color: rgba(130, 214, 255, 0.95);
+  background: linear-gradient(140deg, rgba(26, 82, 128, 0.96), rgba(10, 31, 52, 0.99));
+}
+
+#npc-choice-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+#npc-choice-footer button {
+  min-width: 96px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgba(176, 214, 242, 0.74);
+  border-radius: 9px;
+  background: rgba(11, 24, 38, 0.95);
+  color: #dff2ff;
+  font: 700 0.75rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#mobile-rotate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 96;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(3, 10, 16, 0.96);
+}
+
+#mobile-rotate-card {
+  width: min(90vw, 420px);
+  padding: 18px 16px;
+  border: 1px solid rgba(175, 211, 240, 0.6);
+  border-radius: 12px;
+  background: rgba(10, 26, 40, 0.92);
+  box-shadow: 0 14px 32px rgba(2, 8, 13, 0.42);
+  text-align: center;
+}
+
+#mobile-rotate-card strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #ebf8ff;
+  font: 800 1rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+}
+
+#mobile-rotate-card p {
+  margin: 0;
+  color: rgba(206, 231, 249, 0.94);
+  font: 700 0.8rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+#portal-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(122, 192, 255, 0.22), transparent 52%),
+    rgba(5, 20, 37, 0.84);
+  backdrop-filter: blur(9px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 460ms ease;
+}
+
+#portal-transition.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.portal-loader {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 4px solid rgba(189, 226, 255, 0.26);
+  border-top-color: rgba(232, 247, 255, 0.96);
+  animation: portal-spin 880ms linear infinite;
+}
+
+@keyframes portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#portal-transition-text {
+  margin: 0;
+  color: #e8f7ff;
+  font: 700 0.86rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#hall-portal-countdown {
+  position: fixed;
+  inset: 0;
+  z-index: 91;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 140ms ease, transform 140ms ease;
+  color: #f6fbff;
+  font: 800 clamp(120px, 26vw, 320px) / 1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  text-shadow:
+    0 0 24px rgba(122, 191, 235, 0.9),
+    0 0 64px rgba(122, 191, 235, 0.65),
+    0 10px 34px rgba(0, 0, 0, 0.55);
+}
+
+#hall-portal-countdown.on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#boundary-warning {
+  position: fixed;
+  left: 50%;
+  bottom: 18vh;
+  z-index: 88;
+  min-width: min(92vw, 360px);
+  max-width: min(92vw, 520px);
+  padding: 11px 14px;
+  border: 1px solid rgba(255, 169, 169, 0.7);
+  border-radius: 10px;
+  background: rgba(44, 10, 14, 0.84);
+  color: #ffe5e5;
+  font: 700 0.79rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 8px);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  pointer-events: none;
+  box-shadow: 0 10px 24px rgba(8, 2, 3, 0.35);
+}
+
+#boundary-warning.on {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+#platform-editor {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  background: rgba(0, 18, 26, 0.88);
+  color: #00e5cc;
+  font: 600 0.76rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  padding: 5px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 229, 204, 0.4);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+#platform-editor.hidden {
+  display: none;
+}
+
+#obj-editor-bar {
+  position: fixed;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  background: rgba(34, 21, 4, 0.9);
+  color: #ffcc44;
+  font: 600 0.76rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 204, 68, 0.46);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+#obj-editor-info {
+  margin-left: 8px;
+  color: #ffe19a;
+  font-weight: 700;
+}
+
+#obj-editor-bar.hidden {
+  display: none;
+}
+
+#chalk-pickup-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 55px;
+  z-index: 60;
+  transform: translateX(-50%);
+  background: rgba(6, 16, 28, 0.76);
+  color: #d8eeff;
+  font: 600 0.82rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  padding: 6px 16px 6px 12px;
+  border-radius: 7px;
+  border: 1px solid rgba(122, 191, 235, 0.38);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#chalk-pickup-prompt kbd {
+  display: inline-block;
+  background: rgba(122, 191, 235, 0.22);
+  border: 1px solid rgba(122, 191, 235, 0.6);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  margin-right: 6px;
+  color: #aadcff;
+}
+
+#surface-paint-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 65px;
+  top: auto;
+  z-index: 60;
+  transform: translateX(-50%);
+  background: rgba(6, 16, 28, 0.8);
+  color: #d8eeff;
+  font: 600 0.82rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  padding: 6px 16px 6px 12px;
+  border-radius: 7px;
+  border: 1px solid rgba(122, 191, 235, 0.44);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#surface-paint-prompt kbd {
+  display: inline-block;
+  background: rgba(122, 191, 235, 0.24);
+  border: 1px solid rgba(122, 191, 235, 0.62);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  margin-right: 6px;
+  color: #aadcff;
+}
+
+#surface-painter {
+  position: fixed;
+  inset: 0;
+  z-index: 92;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  overflow: auto;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(109, 182, 241, 0.16), transparent 46%),
+    rgba(4, 12, 20, 0.86);
+}
+
+#surface-painter-panel {
+  width: min(95vw, 700px);
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(154, 198, 232, 0.76);
+  border-radius: 12px;
+  background: rgba(8, 21, 34, 0.95);
+  box-shadow: 0 18px 42px rgba(2, 8, 13, 0.56);
+}
+
+#surface-painter-title {
+  display: none;
+}
+
+#surface-painter-canvas {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: min(76vh, 620px);
+  border: 1px solid rgba(162, 205, 238, 0.66);
+  border-radius: 10px;
+  background: #ffffff;
+  touch-action: none;
+}
+
+#surface-painter-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
+}
+
+#surface-painter-toolbar label {
+  color: #bde1ff;
+  font: 700 0.66rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+#surface-painter-color,
+#surface-painter-bg {
+  width: 44px;
+  min-width: 44px;
+  min-height: 30px;
+  border: 1px solid rgba(164, 204, 236, 0.64);
+  border-radius: 6px;
+  background: rgba(9, 20, 33, 0.84);
+}
+
+#surface-painter-size {
+  flex: 1 1 160px;
+  min-width: 160px;
+}
+
+#surface-painter-fill,
+#surface-painter-eraser {
+  min-height: 30px;
+  min-width: 88px;
+  padding: 0 12px;
+  border: 1px solid rgba(164, 204, 236, 0.64);
+  border-radius: 6px;
+  background: rgba(9, 20, 33, 0.84);
+  color: #e2f3ff;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#surface-painter-actions-toggle {
+  display: none;
+  min-height: 30px;
+  border: 1px solid rgba(164, 204, 236, 0.64);
+  border-radius: 6px;
+  background: rgba(9, 20, 33, 0.84);
+  color: #e2f3ff;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#surface-painter-eraser.active {
+  border-color: rgba(255, 214, 150, 0.92);
+  background: rgba(67, 43, 13, 0.86);
+  color: #ffe3b8;
+}
+
+#surface-painter-fill.active {
+  border-color: rgba(120, 215, 255, 0.9);
+  background: rgba(14, 45, 70, 0.9);
+  color: #d7f1ff;
+  box-shadow: 0 0 0 1px rgba(104, 194, 255, 0.24);
+}
+
+#surface-painter-promo-share-toggle.active {
+  border-color: rgba(255, 210, 140, 0.92);
+  background: rgba(69, 42, 11, 0.9);
+  color: #ffe3b5;
+  box-shadow: 0 0 0 1px rgba(255, 194, 106, 0.24);
+}
+
+#surface-painter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+#surface-painter-actions button {
+  flex: 0 0 auto;
+  min-width: 86px;
+  height: 34px;
+  border: 1px solid rgba(169, 205, 236, 0.64);
+  border-radius: 8px;
+  background: rgba(10, 24, 39, 0.88);
+  color: #e2f3ff;
+  font: 700 0.68rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+#surface-painter-actions button:hover {
+  border-color: rgba(199, 230, 251, 0.92);
+}
+
+#surface-painter-save:disabled {
+  opacity: 0.66;
+  cursor: default;
+}
+
+#tool-ui {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 35;
+  transform: translateX(-50%);
+  display: grid;
+  gap: 8px;
+  min-width: 320px;
+  justify-items: center;
+  pointer-events: auto;
+}
+
+#tool-hotbar {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.tool-slot {
+  min-width: 110px;
+  height: 44px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(170, 201, 233, 0.56);
+  border-radius: 10px;
+  background: rgba(10, 23, 37, 0.8);
+  color: #d8edff;
+  font: 700 0.73rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+}
+
+.tool-slot img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+  filter: invert(87%) sepia(20%) saturate(466%) hue-rotate(178deg) brightness(102%) contrast(98%);
+}
+
+.tool-slot.active {
+  border-color: rgba(201, 226, 250, 0.92);
+  box-shadow: 0 0 0 2px rgba(141, 181, 220, 0.24);
+  background: rgba(16, 38, 58, 0.9);
+}
+
+.tool-key {
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(174, 205, 234, 0.48);
+  border-radius: 5px;
+  font-size: 0.64rem;
+  color: #9ec8ed;
+}
+
+#chalk-colors {
+  display: flex;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 1px solid rgba(168, 197, 225, 0.52);
+  border-radius: 999px;
+  background: rgba(9, 20, 31, 0.84);
+  backdrop-filter: blur(5px);
+}
+
+.chalk-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(198, 219, 241, 0.68);
+  background: var(--swatch, #f5f7ff);
+  cursor: pointer;
+}
+
+.chalk-color.active {
+  box-shadow:
+    0 0 0 2px rgba(225, 240, 255, 0.92),
+    0 0 0 5px rgba(124, 172, 216, 0.35);
+}
+
+#mobile-ui {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+#mobile-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  pointer-events: none;
+}
+
+#mobile-left-col > * {
+  pointer-events: auto;
+}
+
+#mobile-move-pad {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200, 230, 255, 0.1);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+#mobile-move-stick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(180, 218, 248, 0.38);
+  background: radial-gradient(circle at 35% 30%, rgba(220, 240, 255, 0.5), rgba(100, 150, 200, 0.35));
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+#mobile-actions {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  pointer-events: auto;
+}
+
+#mobile-paint {
+  position: fixed;
+  left: 50%;
+  top: auto;
+  bottom: max(14px, calc(env(safe-area-inset-bottom, 0px) + 10px));
+  transform: translateX(-50%);
+  min-width: 110px;
+  height: 38px;
+  border-radius: 999px;
+  z-index: 66;
+  pointer-events: auto;
+}
+
+#mobile-promo-scale-wrap {
+  position: fixed;
+  left: 50%;
+  top: auto;
+  bottom: max(56px, calc(env(safe-area-inset-bottom, 0px) + 52px));
+  transform: translateX(-50%);
+  min-width: min(90vw, 320px);
+  padding: 7px 11px;
+  border: 1px solid rgba(172, 204, 233, 0.66);
+  border-radius: 14px;
+  background: rgba(10, 24, 39, 0.9);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 6px;
+  z-index: 67;
+  pointer-events: auto;
+}
+
+.mobile-promo-scale-row {
+  display: grid;
+  grid-template-columns: auto minmax(110px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+#mobile-promo-scale-wrap label,
+#mobile-promo-scale-value,
+#mobile-promo-scale-y-value {
+  color: #e1f1ff;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+#mobile-promo-scale,
+#mobile-promo-scale-y {
+  width: 100%;
+}
+
+.mobile-action-btn {
+  min-width: 88px;
+  height: 38px;
+  border: 1px solid rgba(172, 204, 233, 0.64);
+  border-radius: 9px;
+  background: rgba(10, 24, 39, 0.84);
+  color: #e1f1ff;
+  font: 700 0.72rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mobile-action-btn.active {
+  border-color: rgba(202, 229, 249, 0.9);
+  background: rgba(20, 53, 83, 0.92);
+  box-shadow: 0 0 0 2px rgba(132, 176, 216, 0.24);
+}
+
+/* Circular jump + sprint buttons */
+#mobile-jump {
+  width: 62px;
+  height: 62px;
+  min-width: 62px;
+  border-radius: 50%;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+#mobile-promo-place {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  font-size: 0.56rem;
+  letter-spacing: 0.03em;
+}
+
+#mobile-sprint {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 50%;
+  font-size: 0.56rem;
+  letter-spacing: 0.03em;
+}
+
+#promo-panel {
+  position: fixed;
+  left: 14px;
+  top: 82px;
+  bottom: 14px;
+  z-index: 34;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  width: min(66vw, 420px);
+  max-height: calc(100vh - 82px - 14px);
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid rgba(179, 208, 236, 0.62);
+  border-radius: 10px;
+  background: rgba(10, 21, 34, 0.82);
+  backdrop-filter: blur(5px);
+}
+
+body:not(.is-mobile-ui) #promo-place-btn {
+  display: none;
+}
+
+#promo-panel.mobile-fullscreen {
+  inset: 0;
+  width: auto;
+  max-height: none;
+  border: none;
+  border-radius: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px
+    calc(env(safe-area-inset-bottom, 0px) + 12px);
+  background: rgba(7, 14, 24, 0.96);
+  z-index: 120;
+}
+
+.promo-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#promo-panel-title {
+  color: #cfe7fb;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.07em;
+}
+
+#promo-panel-close {
+  min-width: 58px;
+  height: 28px;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 7px;
+  background: rgba(12, 30, 47, 0.82);
+  color: #dcedfc;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.promo-panel-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.promo-panel-label {
+  color: #a7cdf1;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+}
+
+#promo-scale,
+#promo-scale-y {
+  width: 100%;
+}
+
+#promo-draw-wrap {
+  width: 100%;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 8px;
+  background: rgba(12, 28, 44, 0.9);
+  overflow: hidden;
+}
+
+#promo-draw-canvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+  background: #6f7681;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+#promo-draw-color {
+  width: 42px;
+  min-width: 42px;
+  height: 30px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.92);
+  padding: 0;
+}
+
+#promo-draw-bg {
+  width: 42px;
+  min-width: 42px;
+  height: 30px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.92);
+  padding: 0;
+}
+
+#promo-draw-bg-label {
+  color: #dff3ff;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+#promo-draw-size {
+  width: 100%;
+}
+
+#promo-media-preview {
+  width: 100%;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 8px;
+  background: rgba(12, 28, 44, 0.88);
+  overflow: hidden;
+}
+
+#promo-media-preview img,
+#promo-media-preview video {
+  width: 100%;
+  max-height: 220px;
+  display: block;
+  object-fit: contain;
+  background: rgba(8, 18, 28, 0.96);
+}
+
+#promo-scale-value,
+#promo-scale-y-value {
+  color: #dff3ff;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  min-width: 42px;
+  text-align: right;
+}
+
+#promo-link-url {
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.92);
+  color: #edf6ff;
+  font: 600 0.7rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#promo-shape {
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.92);
+  color: #edf6ff;
+  font: 600 0.7rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.promo-panel-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(167, 205, 236, 0.58);
+  border-radius: 8px;
+  background: rgba(11, 26, 41, 0.82);
+  color: #d7ecff;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.promo-panel-check input {
+  accent-color: #79cfff;
+}
+
+.promo-panel-check.active {
+  border-color: rgba(255, 210, 140, 0.9);
+  background: rgba(70, 42, 10, 0.88);
+  color: #ffe1b2;
+  box-shadow: 0 0 0 1px rgba(255, 196, 116, 0.28);
+}
+
+.promo-panel-check:not(.active) {
+  border-color: rgba(132, 216, 171, 0.72);
+  background: rgba(12, 44, 28, 0.78);
+  color: #c8ffe0;
+}
+
+.promo-panel-inline-status {
+  color: #dcefff;
+  font: 700 0.58rem/1.2 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  justify-self: end;
+  text-align: right;
+}
+
+.promo-panel-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.promo-panel-actions button {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 7px;
+  background: rgba(12, 30, 47, 0.82);
+  color: #dcedfc;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.promo-panel-actions button:disabled,
+#promo-panel-close:disabled,
+#promo-link-url:disabled,
+#promo-shape:disabled,
+#promo-scale:disabled,
+#promo-scale-y:disabled,
+#promo-draw-color:disabled,
+#promo-draw-bg:disabled,
+#promo-draw-size:disabled {
+  opacity: 0.62;
+  cursor: default;
+}
+
+#promo-media-name,
+#promo-media-help,
+#promo-draw-help,
+#promo-panel-status {
+  margin: 0;
+  color: #dcefff;
+  font: 600 0.58rem/1.3 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+#promo-link-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  z-index: 82;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(6, 16, 28, 0.84);
+  color: #d8eeff;
+  font: 600 0.82rem/1.4 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 1px solid rgba(122, 191, 235, 0.44);
+}
+
+#promo-link-prompt-text kbd {
+  display: inline-block;
+  background: rgba(122, 191, 235, 0.24);
+  border: 1px solid rgba(122, 191, 235, 0.62);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  margin-right: 6px;
+  color: #aadcff;
+}
+
+#promo-open-link-btn {
+  min-width: 54px;
+  height: 28px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 7px;
+  background: rgba(12, 28, 44, 0.92);
+  color: #edf6ff;
+  font: 700 0.6rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#chat-ui {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 33;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
+  padding: 8px;
+  width: min(72vw, 520px);
+  max-height: min(60vh, 520px);
+  overflow: hidden;
+  border: 1px solid rgba(179, 208, 236, 0.62);
+  border-radius: 10px;
+  background: rgba(10, 21, 34, 0.82);
+  backdrop-filter: blur(5px);
+}
+
+#chat-ui.collapsed {
+  width: auto;
+  min-width: 0;
+  max-height: none;
+  grid-template-rows: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+#chat-ui.collapsed #chat-title,
+#chat-ui.collapsed #chat-log,
+#chat-ui.collapsed #chat-controls {
+  display: none;
+}
+
+#chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+#chat-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#chat-title {
+  color: #cfe7fb;
+  font: 700 0.62rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+#chat-expand,
+#chat-toggle {
+  min-width: 62px;
+  height: 26px;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 7px;
+  background: rgba(12, 30, 47, 0.82);
+  color: #dcedfc;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#chat-ui.history-expanded {
+  width: min(92vw, 860px);
+  max-height: min(86vh, 880px);
+}
+
+#chat-ui.history-expanded:not(.mobile-fullscreen) {
+  height: min(86vh, 880px);
+}
+
+#chat-ui.history-expanded #chat-log {
+  min-height: 0;
+  height: 100%;
+  max-height: none;
+}
+
+#promo-hotkey-hint {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 33;
+  padding: 6px 10px;
+  border: 1px solid rgba(175, 208, 238, 0.62);
+  border-radius: 8px;
+  background: rgba(10, 21, 34, 0.82);
+  color: #dcedfc;
+  font: 700 0.58rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+#promo-hotkey-hint kbd {
+  display: inline-flex;
+  min-width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  padding: 0 4px;
+  border: 1px solid rgba(198, 222, 242, 0.65);
+  border-radius: 4px;
+  background: rgba(20, 45, 68, 0.78);
+  color: #eef8ff;
+  font: 700 0.56rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#chat-log {
+  height: min(32vh, 320px);
+  min-height: 160px;
+  max-height: min(32vh, 320px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 8px;
+  border: 1px solid rgba(174, 206, 237, 0.5);
+  border-radius: 8px;
+  background: rgba(11, 25, 41, 0.9);
+  font: 600 0.74rem/1.35 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.03em;
+  scrollbar-width: thin;
+}
+
+#chat-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.chat-line {
+  margin: 0 0 6px;
+  color: #ddeeff;
+  word-break: break-word;
+}
+
+.chat-line:last-child {
+  margin-bottom: 0;
+}
+
+.chat-line.self {
+  color: #ffffff;
+}
+
+.chat-line.system {
+  color: #c0daef;
+  font-style: italic;
+}
+
+.chat-name {
+  color: #a7cdf1;
+  margin-right: 6px;
+}
+
+#chat-input {
+  flex: 1;
+  width: 100%;
+  height: 36px;
+  padding: 0 11px;
+  border: 1px solid rgba(177, 210, 240, 0.64);
+  border-radius: 8px;
+  background: rgba(12, 28, 44, 0.92);
+  color: #edf6ff;
+  font: 600 0.85rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  outline: none;
+}
+
+#chat-input::placeholder {
+  color: rgba(193, 221, 245, 0.76);
+}
+
+#chat-input:focus {
+  border-color: rgba(196, 225, 250, 0.98);
+  box-shadow: 0 0 0 2px rgba(149, 187, 228, 0.26);
+}
+
+#chat-send {
+  min-width: 56px;
+  height: 36px;
+  border: 1px solid rgba(177, 210, 240, 0.68);
+  border-radius: 8px;
+  background: rgba(14, 34, 54, 0.92);
+  color: #edf6ff;
+  font: 700 0.65rem/1 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+#chat-live-feed {
+  position: fixed;
+  left: 14px;
+  bottom: 148px;
+  z-index: 32;
+  width: min(58vw, 440px);
+  max-height: min(30vh, 260px);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* promo panel 열릴 때 PC 채팅 UI 페이드아웃 */
+body.promo-desktop-open #chat-ui,
+body.promo-desktop-open #chat-live-feed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#chat-ui,
+#chat-live-feed {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#chat-live-log {
+  min-height: 74px;
+  overflow-y: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  scrollbar-width: thin;
+}
+
+#chat-live-log .chat-line {
+  margin: 0 0 4px;
+  font: 600 0.68rem/1.3 "Bahnschrift", "Trebuchet MS", "Segoe UI", sans-serif;
+  letter-spacing: 0.02em;
+  color: #edf7ff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.72);
+}
+
+#chat-live-log .chat-line:last-child {
+  margin-bottom: 0;
+}
+
+#boot-error {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+  background: rgba(6, 10, 16, 0.9);
+  color: #ffd9d9;
+  font-size: 0.95rem;
+}
+
+body.is-mobile-ui #hud-ui {
+  top: 8px;
+  left: 8px;
+  min-width: 0;
+  padding: 0;
+  gap: 0;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+body.is-mobile-ui #hud-row-status,
+body.is-mobile-ui #hud-row-position,
+body.is-mobile-ui #hud-row-fps {
+  display: none !important;
+}
+
+body.is-mobile-ui #hud-row-players {
+  gap: 4px;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: rgba(220, 240, 255, 0.92);
+}
+
+body.is-mobile-ui #hud-row-players .hud-key {
+  display: none;
+}
+
+body.is-mobile-ui #hub-flow-ui {
+  display: none !important;
+}
+
+body.is-mobile-ui .player-roster-hint {
+  display: none !important;
+}
+
+body.is-mobile-ui #chat-ui.collapsed {
+  display: none !important;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen {
+  display: grid !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-height: none;
+  border: none;
+  border-radius: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px
+    calc(env(safe-area-inset-bottom, 0px) + 12px);
+  gap: 10px;
+  z-index: 120;
+  background: rgba(7, 14, 24, 0.96);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-header {
+  justify-content: space-between;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-toggle {
+  min-width: 72px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-expand {
+  min-width: 72px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.is-mobile-ui #promo-hotkey-hint {
+  display: none;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-log {
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  padding: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-controls {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: max(0px, env(safe-area-inset-bottom, 0px));
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-input {
+  height: 44px;
+  font-size: 0.92rem;
+}
+
+body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-send {
+  min-width: 72px;
+  height: 44px;
+  font-size: 0.72rem;
+}
+
+body.is-mobile-ui #chat-live-feed {
+  left: 10px;
+  width: min(60vw, 250px);
+  max-height: min(22vh, 150px);
+  z-index: 40;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding: 2px;
+  bottom: 175px;
+}
+
+body.is-mobile-ui #chat-live-log {
+  min-height: 36px;
+  background: transparent;
+  border: none;
+  padding: 3px;
+}
+
+body.is-mobile-ui #chat-live-log .chat-line {
+  font-size: 0.67rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.85);
+  color: #e8f5ff;
+}
+
+body.is-mobile-ui #promo-panel {
+  z-index: 120;
+}
+
+body.is-mobile-ui #promo-panel.mobile-fullscreen {
+  inset: 0;
+  width: auto;
+  max-height: none;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px
+    calc(env(safe-area-inset-bottom, 0px) + 12px);
+  gap: 8px;
+}
+
+body.is-mobile-ui #promo-panel.mobile-fullscreen #promo-draw-wrap {
+  min-height: min(44vh, 420px);
+}
+
+body.is-mobile-ui #promo-link-prompt {
+  bottom: 146px;
+}
+
+/* Mobile: show settings gear, hide fullscreen + graphics buttons */
+body.is-mobile-ui #settings-btn {
+  right: 14px;
+}
+
+body.is-mobile-ui #settings-panel {
+  right: 14px;
+}
+
+body.is-mobile-ui #fullscreen-toggle {
+  display: none !important;
+}
+
+body.is-mobile-ui #graphics-toggle {
+  display: none !important;
+}
+
+body.is-mobile-ui #graphics-controls {
+  display: none !important;
+}
+
+/* Mobile move-pad: even smaller at small screens */
+body.is-mobile-ui #mobile-move-pad {
+  width: 90px;
+  height: 90px;
+}
+
+body.is-mobile-ui #mobile-move-stick {
+  width: 40px;
+  height: 40px;
+}
+
+@media (max-width: 640px) {
+  body.is-mobile-ui #chat-ui {
+    display: none !important;
+  }
+
+  body.is-mobile-ui #chat-ui.mobile-fullscreen {
+    display: grid !important;
+  }
+
+  body.is-mobile-ui #chat-ui.mobile-fullscreen #chat-controls {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+
+  body.is-mobile-ui #promo-panel.mobile-fullscreen {
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px
+      calc(env(safe-area-inset-bottom, 0px) + 10px);
+    gap: 6px;
+  }
+
+  body.is-mobile-ui #promo-panel.mobile-fullscreen #promo-draw-wrap {
+    min-height: min(48vh, 430px);
+  }
+
+  body.is-mobile-ui #promo-link-prompt {
+    bottom: 134px;
+    max-width: calc(100vw - 16px);
+    padding: 6px 8px;
+  }
+
+  /* Mobile HUD: show only player count, no panel background */
+  #hud-ui {
+    top: 8px;
+    left: 8px;
+    min-width: 0;
+    padding: 0;
+    gap: 0;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  /* Hide status, position, fps rows on mobile */
+  #hud-row-status,
+  #hud-row-position,
+  #hud-row-fps {
+    display: none !important;
+  }
+
+  /* Player count: plain white text, no label */
+  #hud-row-players {
+    gap: 4px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: rgba(220, 240, 255, 0.92);
+  }
+
+  #hud-row-players .hud-key {
+    display: none;
+  }
+
+  #player-roster {
+    top: 8px;
+    right: 8px;
+    width: min(68vw, 250px);
+    max-height: 46vh;
+    padding: 8px 9px;
+  }
+
+  .player-roster-head {
+    font-size: 0.68rem;
+  }
+
+  #graphics-toggle {
+    top: 46px;
+    right: 8px;
+    min-width: 84px;
+    height: 28px;
+    font-size: 0.58rem;
+  }
+
+  #graphics-controls {
+    top: 46px;
+    right: 96px;
+    width: min(54vw, 152px);
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  #graphics-controls label {
+    font-size: 0.56rem;
+  }
+
+  #graphics-quality-select {
+    height: 24px;
+    font-size: 0.54rem;
+    padding: 0 6px;
+  }
+
+  #host-chat-toggle {
+    top: 78px;
+    right: 8px;
+    min-width: 76px;
+    height: 28px;
+    font-size: 0.6rem;
+  }
+
+  #host-controls-toggle {
+    top: 110px;
+    right: 8px;
+    min-width: 90px;
+    height: 26px;
+    font-size: 0.56rem;
+  }
+
+  #player-roster-count {
+    font-size: 0.78rem;
+  }
+
+  .player-roster-hint {
+    margin-bottom: 6px;
+    font-size: 0.62rem;
+  }
+
+  #player-roster-list {
+    font-size: 0.66rem;
+    gap: 3px;
+  }
+
+  #host-controls {
+    top: 138px;
+    right: 8px;
+    left: auto;
+    max-height: calc(100vh - 146px);
+  }
+
+  #host-open-portal {
+    min-width: 112px;
+    height: 31px;
+    font-size: 0.67rem;
+  }
+
+  #host-schedule-controls {
+    padding: 6px;
+    gap: 4px;
+  }
+
+  .host-delay-btn,
+  #host-apply-delay,
+  #host-portal-target-apply,
+  #host-a-zone-portal-target-apply {
+    height: 26px;
+    font-size: 0.6rem;
+  }
+
+  #host-delay-minutes {
+    width: 56px;
+    height: 26px;
+    font-size: 0.62rem;
+  }
+
+  #host-billboard-controls {
+    padding: 6px;
+    gap: 4px;
+  }
+
+  #host-right-video,
+  #host-right-play,
+  #host-right-reset {
+    height: 26px;
+    font-size: 0.58rem;
+  }
+
+  #host-right-video-quick {
+    gap: 3px;
+  }
+
+  .host-video-quick-btn {
+    height: 22px;
+    font-size: 0.5rem;
+  }
+
+  #host-right-video {
+    width: 84px;
+  }
+
+  #host-portal-target {
+    min-width: 96px;
+  }
+
+  #host-a-zone-portal-target {
+    min-width: 148px;
+  }
+
+  .hud-row {
+    font-size: 0.64rem;
+  }
+
+  #hub-flow-ui {
+    display: none !important;
+  }
+
+  #nickname-form {
+    padding: 14px;
+  }
+
+  #tool-ui {
+    min-width: 0;
+    width: calc(100vw - 20px);
+    bottom: 10px;
+    gap: 6px;
+  }
+
+  #tool-hotbar {
+    width: 100%;
+  }
+
+  .tool-slot {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #chalk-colors {
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  #chat-ui {
+    left: 8px;
+    right: 8px;
+    bottom: 136px;
+    width: auto;
+    max-height: min(38vh, 280px);
+    z-index: 44;
+    padding: 5px;
+    gap: 5px;
+  }
+
+  #chat-live-feed {
+    left: 10px;
+    width: min(82vw, 320px);
+    max-height: min(28vh, 172px);
+    padding: 6px;
+  }
+
+  #chat-live-log {
+    min-height: 66px;
+    padding: 5px;
+  }
+
+  #chat-live-log .chat-line {
+    font-size: 0.66rem;
+  }
+
+  #chat-log {
+    min-height: 84px;
+    padding: 6px;
+    font-size: 0.68rem;
+  }
+
+  #chat-title {
+    font-size: 0.56rem;
+  }
+
+  #chat-expand,
+  #chat-toggle {
+    min-width: 54px;
+    height: 20px;
+    font-size: 0.52rem;
+  }
+
+  #chat-input {
+    height: 34px;
+    font-size: 0.73rem;
+  }
+
+  #chat-send {
+    min-width: 54px;
+    height: 34px;
+    font-size: 0.62rem;
+  }
+
+  #chat-ui.mobile-fullscreen {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px
+      calc(env(safe-area-inset-bottom, 0px) + 12px);
+    gap: 10px;
+    z-index: 120;
+    background: rgba(7, 14, 24, 0.96);
+    grid-template-rows: auto 1fr auto;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-header {
+    justify-content: space-between;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-title {
+    font-size: 0.76rem;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-expand,
+  #chat-ui.mobile-fullscreen #chat-toggle {
+    min-width: 68px;
+    height: 30px;
+    font-size: 0.67rem;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-log {
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    padding: 10px;
+    font-size: 0.82rem;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-input {
+    height: 42px;
+    font-size: 0.92rem;
+  }
+
+  #chat-ui.mobile-fullscreen #chat-send {
+    min-width: 68px;
+    height: 42px;
+    font-size: 0.72rem;
+  }
+
+  #mobile-ui {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  #mobile-move-pad {
+    width: 90px;
+    height: 90px;
+  }
+
+  #mobile-move-stick {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-action-btn {
+    min-width: 72px;
+    height: 34px;
+    font-size: 0.64rem;
+  }
+
+  #mobile-jump {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    font-size: 0.6rem;
+  }
+
+  #mobile-promo-place {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    font-size: 0.5rem;
+  }
+
+  #mobile-sprint {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    font-size: 0.52rem;
+  }
+
+  #mobile-chat {
+    min-width: 58px;
+    height: 28px;
+    font-size: 0.58rem;
+    letter-spacing: 0.03em;
+  }
+
+  #mobile-promo-scale-wrap {
+    min-width: min(92vw, 300px);
+    padding: 6px 9px;
+    gap: 6px;
+    bottom: max(52px, calc(env(safe-area-inset-bottom, 0px) + 48px));
+  }
+
+  #mobile-promo-scale-wrap label,
+  #mobile-promo-scale-value,
+  #mobile-promo-scale-y-value {
+    font-size: 0.54rem;
+    letter-spacing: 0.04em;
+  }
+
+  #settings-panel {
+    top: 54px;
+    right: 10px;
+    width: 178px;
+  }
+
+  #surface-paint-prompt {
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    font-size: 0.74rem;
+  }
+
+  #surface-painter-panel {
+    width: min(96vw, 560px);
+    padding: 10px;
+    gap: 6px;
+    max-height: calc(100dvh - 16px);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  #surface-painter {
+    place-items: start center;
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px
+      calc(env(safe-area-inset-bottom, 0px) + 8px);
+  }
+
+  #surface-painter-canvas {
+    width: min(100%, 62dvh);
+    justify-self: center;
+    max-height: min(50dvh, 340px);
+  }
+
+  #surface-painter-title {
+    display: none;
+  }
+
+  #surface-painter-toolbar {
+    gap: 6px 8px;
+    overflow: visible;
+    max-height: none;
+    padding-right: 0;
+  }
+
+  #surface-painter-fill,
+  #surface-painter-eraser {
+    justify-self: auto;
+  }
+
+  #surface-painter-actions-toggle {
+    display: inline-flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #surface-painter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    padding-top: 6px;
+    padding-bottom: 2px;
+    background: linear-gradient(
+      to top,
+      rgba(8, 21, 34, 0.98) 72%,
+      rgba(8, 21, 34, 0.12)
+    );
+  }
+
+  #surface-painter-actions button {
+    flex: 1 1 calc(33.333% - 6px);
+    min-width: 0;
+    height: 32px;
+    font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  #surface-painter {
+    padding: calc(env(safe-area-inset-top, 0px) + 6px) 8px
+      calc(env(safe-area-inset-bottom, 0px) + 6px);
+  }
+
+  #surface-painter-panel {
+    max-height: calc(100dvh - 12px);
+    gap: 6px;
+    padding: 8px;
+  }
+
+  #surface-painter-canvas {
+    width: min(100%, 48dvh);
+    max-height: min(34dvh, 190px);
+  }
+
+  #surface-painter-toolbar {
+    max-height: 26dvh;
+  }
+
+  #surface-painter-actions button {
+    height: 30px;
+  }
+}
+
+/* ─── Mobile surface painter: maximised canvas + compact toolbar ─────────── */
+body.is-mobile-ui #surface-painter {
+  place-items: stretch;
+  padding: 0;
+  overflow: hidden;
+}
+
+body.is-mobile-ui #surface-painter-panel {
+  width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: calc(env(safe-area-inset-top, 0px) + 5px) 8px
+    calc(env(safe-area-inset-bottom, 0px) + 5px);
+  gap: 5px;
+  overflow: hidden;
+  display: grid;
+  /* row order: title → compact-toolbar → canvas(1fr) → actions */
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+/* ① title row — minimal */
+body.is-mobile-ui #surface-painter-title {
+  display: none;
+}
+
+/* ② toolbar row — single horizontal flex line, NO scroll */
+body.is-mobile-ui #surface-painter-toolbar {
+  grid-row: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px 10px;
+  max-height: none;
+  overflow: visible;
+  padding: 2px 0;
+  /* reset grid-only props */
+  grid-template-columns: unset;
+  overscroll-behavior: unset;
+}
+
+body.is-mobile-ui #surface-painter-toolbar label {
+  font-size: 0.52rem;
+  letter-spacing: 0.06em;
+  color: rgba(190, 224, 248, 0.88);
+  white-space: nowrap;
+}
+
+body.is-mobile-ui #surface-painter-color,
+body.is-mobile-ui #surface-painter-bg {
+  width: 32px;
+  min-height: 26px;
+  flex-shrink: 0;
+}
+
+body.is-mobile-ui #surface-painter-size {
+  flex: 1 1 60px;
+  max-width: 120px;
+}
+
+body.is-mobile-ui #surface-painter-fill,
+body.is-mobile-ui #surface-painter-eraser {
+  grid-column: unset;
+  justify-self: unset;
+  flex-shrink: 0;
+  min-height: 26px;
+  height: 26px;
+  padding: 0 9px;
+  font-size: 0.56rem;
+}
+
+body.is-mobile-ui #surface-painter-actions-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 26px;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 0.56rem;
+}
+
+/* ③ canvas row — fills all remaining space */
+body.is-mobile-ui #surface-painter-canvas {
+  grid-row: 2;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  justify-self: stretch;
+  align-self: stretch;
+  aspect-ratio: auto;
+}
+
+/* ④ actions row — flex, 저장 prominent */
+body.is-mobile-ui #surface-painter-actions {
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  position: static;
+  background: none;
+  padding: 0;
+  z-index: auto;
+}
+
+body.is-mobile-ui #surface-painter-panel.actions-collapsed {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+body.is-mobile-ui #surface-painter-panel.actions-collapsed #surface-painter-actions {
+  display: none;
+}
+
+body.is-mobile-ui #surface-painter-actions button {
+  min-width: 0;
+  width: 100%;
+  height: 40px;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+}
+
+/* Save button: most prominent */
+body.is-mobile-ui #surface-painter-save {
+  grid-column: auto;
+  background: rgba(14, 42, 66, 0.95);
+  border-color: rgba(100, 184, 255, 0.7);
+  color: #c4e4ff;
+  font-size: 0.68rem;
+}
+
+/* Keep end-actions together on the same row: clear -> close -> save */
+body.is-mobile-ui #surface-painter-clear {
+  order: 97;
+}
+
+body.is-mobile-ui #surface-painter-cancel {
+  order: 98;
+}
+
+body.is-mobile-ui #surface-painter-save {
+  order: 99;
+}
+
+body.mobile-portrait-lock #tool-ui,
+body.mobile-portrait-lock #mobile-ui,
+body.mobile-portrait-lock #chat-ui,
+body.mobile-portrait-lock #chat-live-feed,
+body.mobile-portrait-lock #promo-panel,
+body.mobile-portrait-lock #promo-link-prompt,
+body.mobile-portrait-lock #player-roster,
+body.mobile-portrait-lock #hub-flow-ui,
+body.mobile-portrait-lock #nickname-gate,
+body.mobile-portrait-lock #npc-choice-gate,
+body.mobile-portrait-lock #surface-paint-prompt,
+body.mobile-portrait-lock #chalk-pickup-prompt,
+body.mobile-portrait-lock #surface-painter,
+body.mobile-portrait-lock #hud-ui,
+body.mobile-portrait-lock #fullscreen-toggle,
+body.mobile-portrait-lock #settings-btn,
+body.mobile-portrait-lock #settings-panel,
+body.mobile-portrait-lock #graphics-toggle,
+body.mobile-portrait-lock #graphics-controls,
+body.mobile-portrait-lock #host-chat-toggle {
+  display: none !important;
+}
+
+/* Fallback mobile rules even when body.is-mobile-ui is not set */
+@media (hover: none) and (pointer: coarse), (max-width: 900px) {
+  #surface-painter {
+    place-items: stretch;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  #surface-painter-panel {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 10px
+      calc(env(safe-area-inset-bottom, 0px) + 78px);
+    gap: 8px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  #surface-painter-canvas {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    justify-self: stretch;
+    align-self: stretch;
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+
+  #surface-painter-toolbar {
+    gap: 6px 8px;
+    overflow: visible;
+    max-height: none;
+    padding-right: 0;
+  }
+
+  #surface-painter-fill,
+  #surface-painter-eraser {
+    justify-self: auto;
+  }
+
+  #surface-painter-actions {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 95;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid rgba(154, 198, 232, 0.52);
+    border-radius: 10px;
+    background: rgba(8, 21, 34, 0.96);
+    backdrop-filter: blur(4px);
+  }
+
+  #surface-painter-actions button {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    font-size: 0.72rem;
+  }
+
+  /* Prevent trailing blank cell + hidden save row on fallback mobile layout */
+  #surface-painter-clear {
+    order: 97;
+  }
+
+  #surface-painter-cancel {
+    order: 98;
+  }
+
+  #surface-painter-save {
+    order: 99;
+    grid-column: auto;
+  }
+
+  #surface-painter-panel.actions-collapsed {
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 10px
+      calc(env(safe-area-inset-bottom, 0px) + 8px);
+  }
+
+  #surface-painter-panel.actions-collapsed #surface-painter-actions {
+    display: none;
+  }
+}
