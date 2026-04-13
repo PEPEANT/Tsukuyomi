@@ -9452,6 +9452,33 @@ export class GameRuntime {
     }
   }
 
+  getTempleEntranceSpawnPosition() {
+    const spawn =
+      this.bridgeApproachSpawn?.clone?.() ??
+      new THREE.Vector3(0, GAME_CONSTANTS.PLAYER_HEIGHT, -98);
+    spawn.y = GAME_CONSTANTS.PLAYER_HEIGHT;
+    return spawn;
+  }
+
+  getTempleEntranceLookTarget() {
+    const target =
+      this.bridgeNpcPosition?.clone?.() ??
+      this.bridgeSpawn?.clone?.() ??
+      new THREE.Vector3(0, GAME_CONSTANTS.PLAYER_HEIGHT, -92);
+    target.y = GAME_CONSTANTS.PLAYER_HEIGHT;
+    return target;
+  }
+
+  buildTempleEntranceSpawnState() {
+    const position = this.getTempleEntranceSpawnPosition();
+    const lookTarget = this.getTempleEntranceLookTarget();
+    return {
+      position,
+      yaw: this.getLookYaw(position, lookTarget),
+      pitch: -0.03
+    };
+  }
+
   applyInitialFlowSpawn() {
     if (!this.hubFlowEnabled) {
       this.flowStage = "city_live";
@@ -9466,14 +9493,15 @@ export class GameRuntime {
     }
 
     if (this.isHostEntryLink) {
+      const templeEntranceSpawnState = this.buildTempleEntranceSpawnState();
       this.localPlayerName = this.hostEntryFixedName;
       this.pendingPlayerNameSync = true;
       this.pendingAuthoritativeStateSync = true;
       this.flowStage = "city_live";
       this.bridgeNpcPlayApproved = true;
-      this.playerPosition.copy(this.citySpawn);
-      this.yaw = this.getLookYaw(this.citySpawn, this.cityLookTarget);
-      this.pitch = -0.02;
+      this.playerPosition.copy(templeEntranceSpawnState.position);
+      this.yaw = templeEntranceSpawnState.yaw;
+      this.pitch = templeEntranceSpawnState.pitch;
       this.hubFlowUiEl?.classList.add("hidden");
       this.hideNicknameGate();
       this.hideNpcChoiceGate();
@@ -9527,13 +9555,14 @@ export class GameRuntime {
       }
     }
     if (!forceBridgeIntro) {
+      const templeEntranceSpawnState = this.buildTempleEntranceSpawnState();
       this.pendingPlayerNameSync = true;
       this.pendingAuthoritativeStateSync = true;
       this.flowStage = "city_live";
       this.bridgeNpcPlayApproved = true;
-      this.playerPosition.copy(this.citySpawn);
-      this.yaw = this.getLookYaw(this.citySpawn, this.cityLookTarget);
-      this.pitch = -0.02;
+      this.playerPosition.copy(templeEntranceSpawnState.position);
+      this.yaw = templeEntranceSpawnState.yaw;
+      this.pitch = templeEntranceSpawnState.pitch;
       this.hubFlowUiEl?.classList.add("hidden");
       this.hideNicknameGate();
       this.hideNpcChoiceGate();
@@ -9555,13 +9584,14 @@ export class GameRuntime {
         this.parseQueryFlag("city_live"));
     this.syncPortalAnchorsFromMovableObjects({ force: true });
     if (allowFastCityRejoin && savedNickname.length >= 2) {
+      const templeEntranceSpawnState = this.buildTempleEntranceSpawnState();
       this.pendingPlayerNameSync = true;
       this.pendingAuthoritativeStateSync = true;
       this.flowStage = "city_live";
       this.bridgeNpcPlayApproved = true;
-      this.playerPosition.copy(this.citySpawn);
-      this.yaw = this.getLookYaw(this.citySpawn, this.cityLookTarget);
-      this.pitch = -0.02;
+      this.playerPosition.copy(templeEntranceSpawnState.position);
+      this.yaw = templeEntranceSpawnState.yaw;
+      this.pitch = templeEntranceSpawnState.pitch;
       this.hubFlowUiEl?.classList.add("hidden");
       this.hideNicknameGate();
       this.hideNpcChoiceGate();
@@ -12486,24 +12516,7 @@ export class GameRuntime {
     if (safePortalState) {
       return safePortalState;
     }
-
-    const spawnPosition = new THREE.Vector3(
-      Number(this.citySpawn?.x) || 0,
-      GAME_CONSTANTS.PLAYER_HEIGHT,
-      Number(this.citySpawn?.z) || -8
-    );
-    const lookTarget = new THREE.Vector3(
-      Number(this.cityLookTarget?.x) || 0,
-      GAME_CONSTANTS.PLAYER_HEIGHT,
-      Number(this.cityLookTarget?.z) || 44
-    );
-    const yaw = this.getLookYaw(spawnPosition, lookTarget);
-
-    return {
-      position: spawnPosition,
-      yaw,
-      pitch: -0.02
-    };
+    return this.buildTempleEntranceSpawnState();
   }
 
   getReturnPortalSafetyConfig(portalHint = "") {
@@ -12564,9 +12577,11 @@ export class GameRuntime {
       return null;
     }
 
-    const fallbackX = Number(this.citySpawn?.x) || 0;
+    const fallbackSpawn = this.getTempleEntranceSpawnPosition();
+    const lookTarget = this.getTempleEntranceLookTarget();
+    const fallbackX = Number(fallbackSpawn?.x) || 0;
     const fallbackY = GAME_CONSTANTS.PLAYER_HEIGHT;
-    const fallbackZ = Number(this.citySpawn?.z) || -8;
+    const fallbackZ = Number(fallbackSpawn?.z) || -98;
     const direction = new THREE.Vector3(
       fallbackX - config.centerX,
       0,
@@ -12583,11 +12598,6 @@ export class GameRuntime {
       config.centerX + direction.x * spawnDistance,
       fallbackY,
       config.centerZ + direction.z * spawnDistance
-    );
-    const lookTarget = new THREE.Vector3(
-      Number(this.cityLookTarget?.x) || fallbackX,
-      fallbackY,
-      Number(this.cityLookTarget?.z) || fallbackZ + 52
     );
 
     return {
